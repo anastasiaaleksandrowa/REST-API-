@@ -91,3 +91,8 @@ app.delete('/users/:id', (req, res) => {
 
     res.json({ message: 'Пользователь удален' });
 });
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Сервер запущен на порту ${PORT}`);
+});
