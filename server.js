@@ -39,3 +39,20 @@ app.get('/users/:id', (req, res) => {
         res.status(404).json({ message: 'Пользователь не найден' });
     }
 });
+
+app.post('/users', (req, res) => {
+    const users = readUsers();
+    const newUser = req.body;
+
+    if (!newUser.id) {
+        return res.status(400).json({ message: 'Отсутствует id' });
+    }
+
+    if (users.some(u => u.id === newUser.id)) {
+        return res.status(400).json({ message: 'Пользователь с таким id уже существует' });
+    }
+
+    users.push(newUser);
+    writeUsers(users);
+    res.status(201).json(newUser);
+});
