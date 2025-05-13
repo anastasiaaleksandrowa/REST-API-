@@ -56,3 +56,21 @@ app.post('/users', (req, res) => {
     writeUsers(users);
     res.status(201).json(newUser);
 });
+
+app.put('/users/:id', (req, res) => {
+    const users = readUsers();
+    const userId = req.params.id;
+    const updatedData = req.body;
+
+    const index = users.findIndex(u => u.id === userId);
+
+    if (index === -1) {
+        return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+
+    users[index] = {...users[index], ...updatedData };
+
+    writeUsers(users);
+
+    res.json(users[index]);
+});
