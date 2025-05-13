@@ -74,3 +74,20 @@ app.put('/users/:id', (req, res) => {
 
     res.json(users[index]);
 });
+
+app.delete('/users/:id', (req, res) => {
+    let users = readUsers();
+    const userId = req.params.id;
+
+    const index = users.findIndex(u => u.id === userId);
+
+    if (index === -1) {
+        return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+
+    users.splice(index, 1);
+
+    writeUsers(users);
+
+    res.json({ message: 'Пользователь удален' });
+});
