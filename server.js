@@ -4,6 +4,38 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
+app.post('/users', (req, res) => {
+    const newUser = req.body;
+    console.log('Полученные данные:', newUser);
+
+    fs.readFile('users.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error('Ошибка чтения файла:', err);
+            return res.status(500).send('Ошибка сервера');
+        }
+        let users = [];
+        try {
+            users = JSON.parse(data);
+        } catch (parseErr) {
+            console.error('Ошибка парсинга JSON:', parseErr);
+            return res.status(500).send('Ошибка сервера');
+        }
+
+        users.push(newUser);
+
+        fs.writeFile('users.json', JSON.stringify(users, null, 2), 'utf8', (writeErr) => {
+            if (writeErr) {
+                console.error('Ошибка записи файла:', writeErr);
+                return res.status(500).send('Ошибка сервера');
+            }
+            res.send({ message: 'Пользователь добавлен' });
+        });
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Сервер запущен на порту ${PORT}`);
+});
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 
@@ -41,8 +73,7 @@ app.get('/users/:id', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-    const users = readUsers();
-    const newUser = req.body;
+    console.log('Полученные данные:', req.body);
 
     if (!newUser.id) {
         return res.status(400).json({ message: 'Отсутствует id' });
