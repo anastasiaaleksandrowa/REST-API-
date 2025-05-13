@@ -28,3 +28,14 @@ app.get('/users', (req, res) => {
     const users = readUsers();
     res.json(users);
 });
+
+app.get('/users/:id', (req, res) => {
+    const users = readUsers();
+    const userId = req.params.id;
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        res.json(user);
+    } else {
+        res.status(404).json({ message: 'Пользователь не найден' });
+    }
+});
