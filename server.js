@@ -19,3 +19,7 @@ function readUsers() {
         return [];
     }
 }
+
+function writeUsers(users) {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+}
