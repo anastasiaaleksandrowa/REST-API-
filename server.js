@@ -23,3 +23,8 @@ function readUsers() {
 function writeUsers(users) {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
 }
+
+app.get('/users', (req, res) => {
+    const users = readUsers();
+    res.json(users);
+});
